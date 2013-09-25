@@ -97,6 +97,10 @@ class HTTPResponse(io.IOBase):
         if hasattr(body, 'read'):
             self._fp = body
 
+        if getattr(connection, 'sock', False) and\
+            getattr(connection.sock, 'getpeercert', False):
+            self.peer_cert = connection.sock.getpeercert(binary_form=True)
+
         if preload_content and not self._body:
             self._body = self.read(decode_content=decode_content)
 
